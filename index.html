@@ -1,24 +1,460 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>chi Linh co xinh gai khong ?</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap">
-    <link rel="stylesheet" href="style.css"> <!-- Link to external stylesheet -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gửi Nguyễn Thái Bảo Linh</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at center, #292929 0%, #111 55%, #030303 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+/* ===== SAO ===== */
+
+.stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    opacity: .5;
+    animation: twinkle 3s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+    0%,100% {
+        opacity: .15;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ===== KHUNG ===== */
+
+.scene {
+    position: relative;
+    width: 420px;
+    height: 330px;
+    perspective: 1200px;
+}
+
+/* ===== LÁ THƯ ===== */
+
+.letter {
+    position: absolute;
+    z-index: 2;
+
+    width: 310px;
+    min-height: 390px;
+
+    left: 50%;
+    bottom: 35px;
+
+    transform:
+        translateX(-50%)
+        translateY(170px);
+
+    background: #fffdf7;
+
+    padding: 42px 32px;
+
+    box-shadow:
+        0 15px 45px rgba(0,0,0,.45);
+
+    opacity: 0;
+
+    transition:
+        transform 1.5s cubic-bezier(.2,.8,.2,1),
+        opacity 1s ease;
+}
+
+/* viền trong giấy */
+
+.letter::before {
+    content: "";
+    position: absolute;
+    inset: 14px;
+
+    border: 1px solid rgba(100,70,40,.15);
+
+    pointer-events: none;
+}
+
+.letter h1 {
+    text-align: center;
+
+    font-size: 24px;
+    font-weight: normal;
+
+    color: #392c25;
+
+    margin-bottom: 28px;
+}
+
+.letter p {
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    color: #3e3631;
+
+    margin-bottom: 17px;
+}
+
+.signature {
+    margin-top: 28px;
+
+    text-align: right;
+
+    font-style: italic;
+
+    font-size: 16px;
+}
+
+/* ===== PHONG BÌ ===== */
+
+.envelope {
+    position: absolute;
+
+    width: 360px;
+    height: 230px;
+
+    left: 50%;
+    bottom: 25px;
+
+    transform: translateX(-50%);
+
+    cursor: pointer;
+
+    filter:
+        drop-shadow(0 25px 25px rgba(0,0,0,.5));
+}
+
+.envelope-body {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    background: #e8d6c3;
+
+    border-radius: 4px;
+
+    overflow: hidden;
+}
+
+/* mặt trước */
+
+.envelope-body::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: #d8bfa6;
+
+    clip-path:
+        polygon(
+            0 0,
+            50% 55%,
+            100% 0,
+            100% 100%,
+            0 100%
+        );
+}
+
+/* cạnh trái */
+
+.envelope-body::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: #edddca;
+
+    clip-path:
+        polygon(
+            0 0,
+            50% 55%,
+            0 100%
+        );
+}
+
+/* ===== NẮP PHONG BÌ ===== */
+
+.flap {
+    position: absolute;
+
+    z-index: 5;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 125px;
+
+    background: #ead9c6;
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            50% 100%
+        );
+
+    transform-origin: top center;
+
+    transition:
+        transform 1s cubic-bezier(.4,0,.2,1);
+}
+
+/* ===== TRÁI TIM ===== */
+
+.heart {
+    position: absolute;
+
+    z-index: 20;
+
+    width: 45px;
+    height: 45px;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        rotate(45deg);
+
+    background: #a63d40;
+
+    transition:
+        opacity .5s,
+        transform .8s;
+}
+
+.heart::before,
+.heart::after {
+    content: "";
+
+    position: absolute;
+
+    width: 45px;
+    height: 45px;
+
+    background: #a63d40;
+
+    border-radius: 50%;
+}
+
+.heart::before {
+    top: -22px;
+    left: 0;
+}
+
+.heart::after {
+    left: -22px;
+    top: 0;
+}
+
+/* ===== KHI MỞ ===== */
+
+.scene.open .flap {
+    transform: rotateX(180deg);
+}
+
+.scene.open .letter {
+    z-index: 10;
+
+    transform:
+        translateX(-50%)
+        translateY(-170px);
+
+    opacity: 1;
+}
+
+.scene.open .heart {
+    opacity: 0;
+
+    transform:
+        translate(-50%, -50%)
+        rotate(45deg)
+        scale(0);
+}
+
+/* ===== CHỮ HƯỚNG DẪN ===== */
+
+.hint {
+    position: fixed;
+
+    bottom: 35px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    color: rgba(255,255,255,.65);
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+
+    letter-spacing: 4px;
+
+    animation: breathe 2s infinite;
+}
+
+@keyframes breathe {
+    0%,100% {
+        opacity: .35;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 600px) {
+
+    .scene {
+        transform: scale(.75);
+    }
+
+    .hint {
+        font-size: 10px;
+        letter-spacing: 3px;
+    }
+}
+</style>
 </head>
+
+
 <body>
-    <div id="container">
-        <div id="image-container"></div> <!-- Container for displaying images -->
-        <div id="text-container">
-            <div id="question">Chi Linh co xinh gai khong?</div> <!-- Question -->
-            <div id="options">
-                <button id="yes-button" onclick="selectOption('yes')">Co</button> <!-- Yes button -->
-                <button id="no-button" onclick="selectOption('no')">Khong</button> <!-- No button -->
-            </div>
+
+<!-- SAO -->
+
+<div class="stars"></div>
+
+
+<div class="scene" id="scene">
+
+    <!-- BỨC THƯ -->
+
+    <div class="letter">
+
+        <h1>Gửi Nguyễn Thái Bảo Linh,</h1>
+
+        <p>
+            Có những điều rất khó để nói thành lời,
+            nên anh đã chọn cách viết chúng xuống đây.
+        </p>
+
+        <p>
+            Anh không biết em sẽ đọc bức thư này
+            với cảm xúc như thế nào.
+            Nhưng anh chỉ muốn em biết rằng,
+            có một người từng thật lòng trân trọng em.
+        </p>
+
+        <p>
+            Cảm ơn em vì đã xuất hiện trong cuộc đời anh.
+            Dù sau này chúng ta có đi về những hướng khác nhau,
+            anh vẫn sẽ nhớ những khoảng thời gian đẹp
+            mà chúng ta từng có.
+        </p>
+
+        <p>
+            Mong rằng em sẽ luôn vui vẻ,
+            luôn được yêu thương,
+            và sẽ gặp được những điều tốt đẹp nhất.
+        </p>
+
+        <div class="signature">
+            — Người vẫn nhớ em
         </div>
+
     </div>
 
-    <script src="script.js"></script> <!-- Link to external JavaScript file -->
+
+    <!-- PHONG BÌ -->
+
+    <div class="envelope">
+
+        <div class="envelope-body"></div>
+
+        <div class="flap"></div>
+
+        <div class="heart"></div>
+
+    </div>
+
+</div>
+
+
+<div class="hint">
+    CLICK TO OPEN
+</div>
+
+
+<script>
+
+/* Tạo sao */
+
+const stars = document.querySelector(".stars");
+
+for (let i = 0; i < 100; i++) {
+
+    const star = document.createElement("div");
+
+    star.classList.add("star");
+
+    star.style.left =
+        Math.random() * 100 + "%";
+
+    star.style.top =
+        Math.random() * 100 + "%";
+
+    star.style.animationDelay =
+        Math.random() * 3 + "s";
+
+    stars.appendChild(star);
+}
+
+
+/* Mở thư */
+
+const scene = document.getElementById("scene");
+
+scene.addEventListener("click", () => {
+
+    scene.classList.toggle("open");
+
+});
+
+</script>
+
 </body>
 </html>
